@@ -10,7 +10,8 @@
     "test": "mocha tests",
     "start": "node index.js",
     "jsdoc": "jsdoc ./src -d docs",
-    "lint": "eslint ./src"
+    "lint": "eslint ./src",
+    "coverage": "nyc npm run test"
   },
   "keywords": [
     "Xendit"
@@ -26,6 +27,7 @@
     "eslint": "^7.32.0",
     "jsdoc": "^3.6.7",
     "mocha": "^6.1.4",
+    "nyc": "^15.1.0",
     "supertest": "^4.0.2"
   },
   "engines": {
