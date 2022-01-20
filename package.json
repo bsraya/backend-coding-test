@@ -9,7 +9,8 @@
   "scripts": {
     "test": "mocha tests",
     "start": "node index.js",
-    "jsdoc": "jsdoc ./src -d docs"
+    "jsdoc": "jsdoc ./src -d docs",
+    "lint": "eslint ./src"
   },
   "keywords": [
     "Xendit"
@@ -22,6 +23,7 @@
     "sqlite3": "^4.0.6"
   },
   "devDependencies": {
+    "eslint": "^7.32.0",
     "jsdoc": "^3.6.7",
     "mocha": "^6.1.4",
     "supertest": "^4.0.2"
