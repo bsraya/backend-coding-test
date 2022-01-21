@@ -130,7 +130,7 @@ async function ridesGetHandler(db, req, res) {
  */
 async function ridesGetByIdHandler(db, req, res) {
     try {
-        const rows = await db.all(`SELECT * FROM Rides WHERE rideID='${req.params.id}'`);
+        const rows = await db.all('SELECT * FROM Rides WHERE rideID=?', req.params.id);
         if (rows.length === 0) {
             return res.send({
                 error_code: 'RIDES_NOT_FOUND_ERROR',
