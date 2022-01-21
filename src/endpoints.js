@@ -94,10 +94,22 @@ function ridesPostHandler(db, req, res) {
  * 
  * @param {Object} db - The database.
  * @param {Object} req - The client request.
+ * @param {Number} [req.query.from=0] - The offset of the requested rides.
+ * @param {Number} [req.query.count=10] - The number of the requested rides.
  * @param {Object} res - The client response.
  */
 function ridesGetHandler(db, req, res) {
-    db.all('SELECT * FROM Rides', function (err, rows) {
+    const from = req.query.from ? Number(req.query.from) : 0;
+    const count = req.query.count ? Number(req.query.count) : 10;
+
+    if (!Number.isInteger(from) || !Number.isInteger(count)) {
+        return res.send({
+            error_code: 'VALIDATION_ERROR',
+            message: 'The `from` or `count` must an integer larger or equal to 0'
+        });
+    }
+
+    db.all('SELECT * FROM Rides LIMIT ?,?', from, count, function (err, rows) {
         if (err) {
             return res.send({
                 error_code: 'SERVER_ERROR',

@@ -36,7 +36,12 @@ describe('API tests', () => {
         }
 
         // Clean the records
-        db.all('DELETE FROM Rides', done);
+        db.all('DELETE FROM Rides', () => {
+            // Reset the autoincrement rideID
+            db.all('DELETE FROM SQLITE_SEQUENCE where name=\'Rides\'', () => {
+                done()
+            });
+        });
     })
 
     describe('GET /health', () => {
@@ -202,6 +207,65 @@ describe('API tests', () => {
                         .catch(reject);
                 })
                 .catch(reject);
+            });
+        });
+    });
+
+    describe('GET /rides with queries', () => {
+        it('should support pagination', () => {
+            return new Promise((resolve, reject) => {
+                const addRide = request(app)
+                    .post('/rides')
+                    .send(ridePayload)
+                    .catch(reject);
+
+                const addRide2 = request(app)
+                    .post('/rides')
+                    .send(ridePayload)
+                    .catch(reject);
+
+                const addRide3 = request(app)
+                    .post('/rides')
+                    .send(ridePayload)
+                    .catch(reject);
+
+                Promise.all([addRide, addRide2, addRide3]).then(([res1, res2, res3]) => {
+                    if (res1.body.error_code || res2.body.error_code || res3.body.error_code) {
+                        reject(res1.body.error_code || res2.body.error_code || res3.body.error_code);
+                    }
+    
+                    request(app)
+                        .get('/rides?from=1&count=1')
+                        .then(response => {
+                            assert.equal(response.body.length, 1);
+                            const {created, ...rest} = response.body[0];
+                            assert.deepEqual(rest, {
+                                rideID: '2',
+                                driverName: "Victor",
+                                driverVehicle: "Volvo",
+                                endLat: 20,
+                                endLong: 100,
+                                riderName: "John",
+                                startLat: 20,
+                                startLong: 100
+                            });
+                            resolve();
+                        })
+                        .catch(reject);
+                })
+                .catch(reject);
+            });
+        });
+
+        it('should return validation error if the given query is invalid', () => {
+            return new Promise((resolve, reject) => {
+                request(app)
+                    .get('/rides?from=1.1&count=-2')
+                    .then(response => {
+                        assert.equal(response.body.error_code, 'VALIDATION_ERROR');
+                        resolve();
+                    })
+                    .catch(reject);
             });
         });
     });
