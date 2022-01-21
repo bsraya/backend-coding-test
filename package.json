@@ -9,7 +9,7 @@
   "scripts": {
     "test": "mocha tests",
     "start": "node index.js",
-    "jsdoc": "jsdoc ./src -d docs",
+    "jsdoc": "jsdoc ./src ./Readme.md -d docs",
     "lint": "eslint ./src",
     "coverage": "nyc npm run test"
   },

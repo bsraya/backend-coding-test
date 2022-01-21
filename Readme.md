@@ -1,8 +1,12 @@
+> **_**Status of this exercise**_**
+> **_**✅ Implemented**_**
+> **_**❌ Not Implement**_**
+
 # Xendit Coding Exercise
 
 The goal of these exercises are to assess your proficiency in software engineering that is related to the daily work that we do at Xendit. Please follow the instructions below to complete the assessment.
 
-## Setup
+## Setup ✅
 
 1. Create a new repository in your own github profile named `backend-coding-test` and commit the contents of this folder
 2. Ensure `node (>8.6 and <= 10)` and `npm` are installed
@@ -11,7 +15,7 @@ The goal of these exercises are to assess your proficiency in software engineeri
 5. Run `npm start`
 6. Hit the server to test health `curl localhost:8010/health` and expect a `200` response 
 
-## Tasks
+## Tasks ✅
 
 Below will be your set of tasks to accomplish. Please work on each of these tasks in order. Success criteria will be defined clearly for each task
 
@@ -22,23 +26,23 @@ Below will be your set of tasks to accomplish. Please work on each of these task
 5. [Security](#security)
 6. [Load Testing](#load-testing)
 
-### Documentation
+### Documentation ✅
 
 Please deliver documentation of the server that clearly explains the goals of this project and clarifies the API response that is expected.
 
 #### Success Criteria
 
 1. A pull request against `master` of your fork with a clear description of the change and purpose and merge it
-3. **[BONUS]** Create an easy way to deploy and view the documentation in a web format and include instructions to do so
+3. **[BONUS]** Create an easy way to deploy and view the documentation in a web format and include instructions to do so ✅
 
-### Implement Tooling
+### Implement Tooling ✅
 
 Please implement the following tooling:
 
-1. `eslint` - for linting
-2. `nyc` - for code coverage
-3. `pre-push` - for git pre push hook running tests
-4. `winston` - for logging
+1. `eslint` - for linting ✅
+2. `nyc` - for code coverage ✅
+3. `pre-push` - for git pre push hook running tests ✅
+4. `winston` - for logging ✅
 
 #### Success Criteria
 
@@ -53,7 +57,7 @@ Please implement the following tooling:
 5. **[BONUS]** Add integration to CI such as Travis or Circle
 6. **[BONUS]** Add Typescript support
 
-### Implement Pagination
+### Implement Pagination ✅
 
 Please implement pagination to retrieve pages of the resource `rides`.
 
@@ -63,13 +67,13 @@ Please implement pagination to retrieve pages of the resource `rides`.
     3. Documentation
 2. Merge the pull request
 
-### Refactoring
+### Refactoring ✅
 
 Please implement the following refactors of the code:
 
-1. Convert callback style code to use `async/await`
-2. Reduce complexity at top level control flow logic and move logic down and test independently
-3. **[BONUS]** Split between functional and imperative function and test independently
+1. Convert callback style code to use `async/await` ✅
+2. Reduce complexity at top level control flow logic and move logic down and test independently ✅
+3. **[BONUS]** Split between functional and imperative function and test independently ✅
 
 #### Success Criteria
 
@@ -77,12 +81,12 @@ Please implement the following refactors of the code:
     1. Code changes
     2. Tests
 
-### Security
+### Security ✅
 
 Please implement the following security controls for your system:
 
-1. Ensure the system is not vulnerable to [SQL injection](https://www.owasp.org/index.php/SQL_Injection)
-2. **[BONUS]** Implement an additional security improvement of your choice
+1. Ensure the system is not vulnerable to [SQL injection](https://www.owasp.org/index.php/SQL_Injection) ✅
+2. **[BONUS]** Implement an additional security improvement of your choice ✅
 
 #### Success Criteria
 
@@ -90,7 +94,7 @@ Please implement the following security controls for your system:
     1. Changes to the code
     2. Tests ensuring the vulnerability is addressed
 
-### Load Testing
+### Load Testing ❌ (I decided to skip this exercise)
 
 Please implement load testing to ensure your service can handle a high amount of traffic
 

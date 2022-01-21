@@ -39,6 +39,7 @@ function healthGetHandler(req, res) {
 /**
  * Handler for POST rides endpoint.
  * 
+ * @param {Object} db - The database.
  * @param {Object} req - The client request.
  * @param {Object} req.body - The client request body.
  * @param {Number} req.body.start_lat - The latitude where the ride started. A number range [-90 90].
@@ -49,7 +50,7 @@ function healthGetHandler(req, res) {
  * @param {String} req.body.driver_name - The driver name. A non-empty string.
  * @param {String} req.body.driver_vehicle - The driver vehicle. A non-empty string.
  */
-function ridesPostHandler(req, res) {
+async function ridesPostHandler(db, req, res) {
     const startLatitude = Number(req.body.start_lat);
     const startLongitude = Number(req.body.start_long);
     const endLatitude = Number(req.body.end_lat);
@@ -82,38 +83,31 @@ function ridesPostHandler(req, res) {
     if (typeof driverName !== 'string' || driverName.length &lt; 1) {
         return res.send({
             error_code: 'VALIDATION_ERROR',
-            message: 'Rider name must be a non empty string'
+            message: 'Driver name must be a non empty string'
         });
     }
 
     if (typeof driverVehicle !== 'string' || driverVehicle.length &lt; 1) {
         return res.send({
             error_code: 'VALIDATION_ERROR',
-            message: 'Rider name must be a non empty string'
+            message: 'Driver vehicle must be a non empty string'
         });
     }
 
-    var values = [req.body.start_lat, req.body.start_long, req.body.end_lat, req.body.end_long, req.body.rider_name, req.body.driver_name, req.body.driver_vehicle];
-    
-    const result = db.run('INSERT INTO Rides(startLat, startLong, endLat, endLong, riderName, driverName, driverVehicle) VALUES (?, ?, ?, ?, ?, ?, ?)', values, function (err) {
-        if (err) {
-            return res.send({
-                error_code: 'SERVER_ERROR',
-                message: 'Unknown error'
-            });
-        }
+    const {start_lat, start_long, end_lat, end_long, rider_name, driver_name, driver_vehicle} = req.body;
+    const values = [start_lat, start_long, end_lat, end_long, rider_name, driver_name, driver_vehicle];
 
-        db.all('SELECT * FROM Rides WHERE rideID = ?', this.lastID, function (err, rows) {
-            if (err) {
-                return res.send({
-                    error_code: 'SERVER_ERROR',
-                    message: 'Unknown error'
-                });
-            }
+    try {
+        const result = await db.run('INSERT INTO Rides(startLat, startLong, endLat, endLong, riderName, driverName, driverVehicle) VALUES (?, ?, ?, ?, ?, ?, ?)', values);
+        const rows = await db.all('SELECT * FROM Rides WHERE rideID = ?', result.lastID);
 
-            res.send(rows);
+        res.send(rows);
+    } catch (err) {
+        res.send({
+            error_code: 'SERVER_ERROR',
+            message: 'Unknown error'
         });
-    });
+    }
 }
 
 /**
@@ -121,17 +115,23 @@ function ridesPostHandler(req, res) {
  * 
  * @param {Object} db - The database.
  * @param {Object} req - The client request.
+ * @param {Number} [req.query.from=0] - The offset of the requested rides.
+ * @param {Number} [req.query.count=10] - The number of the requested rides.
  * @param {Object} res - The client response.
  */
-function ridesGetHandler(db, req, res) {
-    db.all('SELECT * FROM Rides', function (err, rows) {
-        if (err) {
-            return res.send({
-                error_code: 'SERVER_ERROR',
-                message: 'Unknown error'
-            });
-        }
+async function ridesGetHandler(db, req, res) {
+    const from = req.query.from ? Number(req.query.from) : 0;
+    const count = req.query.count ? Number(req.query.count) : 10;
 
+    if (!Number.isInteger(from) || !Number.isInteger(count)) {
+        return res.send({
+            error_code: 'VALIDATION_ERROR',
+            message: 'The `from` or `count` must an integer larger or equal to 0'
+        });
+    }
+
+    try {
+        const rows = await db.all('SELECT * FROM Rides LIMIT ?,?', from, count);
         if (rows.length === 0) {
             return res.send({
                 error_code: 'RIDES_NOT_FOUND_ERROR',
@@ -140,7 +140,12 @@ function ridesGetHandler(db, req, res) {
         }
 
         res.send(rows);
-    });
+    } catch(err) {
+        return res.send({
+            error_code: 'SERVER_ERROR',
+            message: 'Unknown error'
+        });
+    };
 }
 
 /**
@@ -151,15 +156,9 @@ function ridesGetHandler(db, req, res) {
  * @param {Object} req.params.id - The requested ride id.
  * @param {Object} res - The client response.
  */
-function ridesGetByIdHandler(db, req, res) {
-    db.all(`SELECT * FROM Rides WHERE rideID='${req.params.id}'`, function (err, rows) {
-        if (err) {
-            return res.send({
-                error_code: 'SERVER_ERROR',
-                message: 'Unknown error'
-            });
-        }
-
+async function ridesGetByIdHandler(db, req, res) {
+    try {
+        const rows = await db.all('SELECT * FROM Rides WHERE rideID=?', req.params.id);
         if (rows.length === 0) {
             return res.send({
                 error_code: 'RIDES_NOT_FOUND_ERROR',
@@ -168,7 +167,12 @@ function ridesGetByIdHandler(db, req, res) {
         }
 
         res.send(rows);
-    });
+    } catch(err) {
+        return res.send({
+            error_code: 'SERVER_ERROR',
+            message: 'Unknown error'
+        });
+    }
 }
 
 module.exports = {
@@ -187,13 +191,13 @@ module.exports = {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#healthGetHandler">healthGetHandler</a></li><li><a href="global.html#ridesGetByIdHandler">ridesGetByIdHandler</a></li><li><a href="global.html#ridesGetHandler">ridesGetHandler</a></li><li><a href="global.html#ridesPostHandler">ridesPostHandler</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#healthGetHandler">healthGetHandler</a></li><li><a href="global.html#PromisifyDB">PromisifyDB</a></li><li><a href="global.html#ridesGetByIdHandler">ridesGetByIdHandler</a></li><li><a href="global.html#ridesGetHandler">ridesGetHandler</a></li><li><a href="global.html#ridesPostHandler">ridesPostHandler</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Thu Jan 20 2022 13:08:35 GMT+0100 (Central European Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Fri Jan 21 2022 21:18:56 GMT+0100 (Central European Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

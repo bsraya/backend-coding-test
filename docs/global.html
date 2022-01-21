@@ -264,7 +264,193 @@
     
 
     
-    <h4 class="name" id="ridesGetByIdHandler"><span class="type-signature"></span>ridesGetByIdHandler<span class="signature">(db, req, res)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="PromisifyDB"><span class="type-signature"></span>PromisifyDB<span class="signature">(options)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    A Utility class that promisify sqlite3
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The options.
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>db</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">sqlite</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The sqlite instance.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="promisify_db.js.html">promisify_db.js</a>, <a href="promisify_db.js.html#line7">line 7</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="ridesGetByIdHandler"><span class="type-signature">(async) </span>ridesGetByIdHandler<span class="signature">(db, req, res)</span><span class="type-signature"></span></h4>
     
 
     
@@ -460,7 +646,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="endpoints.js.html">endpoints.js</a>, <a href="endpoints.js.html#line126">line 126</a>
+        <a href="endpoints.js.html">endpoints.js</a>, <a href="endpoints.js.html#line131">line 131</a>
     </li></ul></dd>
     
 
@@ -496,7 +682,7 @@
     
 
     
-    <h4 class="name" id="ridesGetHandler"><span class="type-signature"></span>ridesGetHandler<span class="signature">(db, req, res)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="ridesGetHandler"><span class="type-signature">(async) </span>ridesGetHandler<span class="signature">(db, req, res)</span><span class="type-signature"></span></h4>
     
 
     
@@ -579,7 +765,115 @@
 
             
 
-            <td class="description last">The client request.</td>
+            <td class="description last">The client request.
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>query.from</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last">The offset of the requested rides.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>query.count</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    10
+                
+                </td>
+            
+
+            <td class="description last">The number of the requested rides.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
         </tr>
 
     
@@ -643,7 +937,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="endpoints.js.html">endpoints.js</a>, <a href="endpoints.js.html#line98">line 98</a>
+        <a href="endpoints.js.html">endpoints.js</a>, <a href="endpoints.js.html#line94">line 94</a>
     </li></ul></dd>
     
 
@@ -679,7 +973,7 @@
     
 
     
-    <h4 class="name" id="ridesPostHandler"><span class="type-signature"></span>ridesPostHandler<span class="signature">(req)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="ridesPostHandler"><span class="type-signature">(async) </span>ridesPostHandler<span class="signature">(db, req)</span><span class="type-signature"></span></h4>
     
 
     
@@ -719,6 +1013,29 @@
     </thead>
 
     <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>db</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The database.</td>
+        </tr>
+
     
 
         <tr>
@@ -1016,7 +1333,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="endpoints.js.html">endpoints.js</a>, <a href="endpoints.js.html#line24">line 24</a>
+        <a href="endpoints.js.html">endpoints.js</a>, <a href="endpoints.js.html#line25">line 25</a>
     </li></ul></dd>
     
 
@@ -1062,13 +1379,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#healthGetHandler">healthGetHandler</a></li><li><a href="global.html#ridesGetByIdHandler">ridesGetByIdHandler</a></li><li><a href="global.html#ridesGetHandler">ridesGetHandler</a></li><li><a href="global.html#ridesPostHandler">ridesPostHandler</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#healthGetHandler">healthGetHandler</a></li><li><a href="global.html#PromisifyDB">PromisifyDB</a></li><li><a href="global.html#ridesGetByIdHandler">ridesGetByIdHandler</a></li><li><a href="global.html#ridesGetHandler">ridesGetHandler</a></li><li><a href="global.html#ridesPostHandler">ridesPostHandler</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Thu Jan 20 2022 13:08:35 GMT+0100 (Central European Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Fri Jan 21 2022 21:18:56 GMT+0100 (Central European Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>
