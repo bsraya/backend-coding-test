@@ -1,5 +1,6 @@
 'use strict';
 
+const helmet = require("helmet");
 const express = require('express');
 const app = express();
 
@@ -24,6 +25,8 @@ function errorLoggerMiddleware(req, res, next) {
 }
 
 module.exports = (db) => {
+    app.use(helmet());
+
     app.use(errorLoggerMiddleware);
 
     app.get('/health', endpoints.healthGetHandler);
