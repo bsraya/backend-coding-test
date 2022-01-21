@@ -22,7 +22,7 @@ function healthGetHandler(req, res) {
  * @param {String} req.body.driver_name - The driver name. A non-empty string.
  * @param {String} req.body.driver_vehicle - The driver vehicle. A non-empty string.
  */
-function ridesPostHandler(db, req, res) {
+async function ridesPostHandler(db, req, res) {
     const startLatitude = Number(req.body.start_lat);
     const startLongitude = Number(req.body.start_long);
     const endLatitude = Number(req.body.end_lat);
@@ -66,27 +66,20 @@ function ridesPostHandler(db, req, res) {
         });
     }
 
-    var values = [req.body.start_lat, req.body.start_long, req.body.end_lat, req.body.end_long, req.body.rider_name, req.body.driver_name, req.body.driver_vehicle];
-    
-    db.run('INSERT INTO Rides(startLat, startLong, endLat, endLong, riderName, driverName, driverVehicle) VALUES (?, ?, ?, ?, ?, ?, ?)', values, function (err) {
-        if (err) {
-            return res.send({
-                error_code: 'SERVER_ERROR',
-                message: 'Unknown error'
-            });
-        }
+    const {start_lat, start_long, end_lat, end_long, rider_name, driver_name, driver_vehicle} = req.body;
+    const values = [start_lat, start_long, end_lat, end_long, rider_name, driver_name, driver_vehicle];
 
-        db.all('SELECT * FROM Rides WHERE rideID = ?', this.lastID, function (err, rows) {
-            if (err) {
-                return res.send({
-                    error_code: 'SERVER_ERROR',
-                    message: 'Unknown error'
-                });
-            }
+    try {
+        const result = await db.run('INSERT INTO Rides(startLat, startLong, endLat, endLong, riderName, driverName, driverVehicle) VALUES (?, ?, ?, ?, ?, ?, ?)', values);
+        const rows = await db.all('SELECT * FROM Rides WHERE rideID = ?', result.lastID);
 
-            res.send(rows);
+        res.send(rows);
+    } catch (err) {
+        res.send({
+            error_code: 'SERVER_ERROR',
+            message: 'Unknown error'
         });
-    });
+    }
 }
 
 /**
@@ -98,7 +91,7 @@ function ridesPostHandler(db, req, res) {
  * @param {Number} [req.query.count=10] - The number of the requested rides.
  * @param {Object} res - The client response.
  */
-function ridesGetHandler(db, req, res) {
+async function ridesGetHandler(db, req, res) {
     const from = req.query.from ? Number(req.query.from) : 0;
     const count = req.query.count ? Number(req.query.count) : 10;
 
@@ -109,14 +102,8 @@ function ridesGetHandler(db, req, res) {
         });
     }
 
-    db.all('SELECT * FROM Rides LIMIT ?,?', from, count, function (err, rows) {
-        if (err) {
-            return res.send({
-                error_code: 'SERVER_ERROR',
-                message: 'Unknown error'
-            });
-        }
-
+    try {
+        const rows = await db.all('SELECT * FROM Rides LIMIT ?,?', from, count);
         if (rows.length === 0) {
             return res.send({
                 error_code: 'RIDES_NOT_FOUND_ERROR',
@@ -125,7 +112,12 @@ function ridesGetHandler(db, req, res) {
         }
 
         res.send(rows);
-    });
+    } catch(err) {
+        return res.send({
+            error_code: 'SERVER_ERROR',
+            message: 'Unknown error'
+        });
+    };
 }
 
 /**
@@ -136,15 +128,9 @@ function ridesGetHandler(db, req, res) {
  * @param {Object} req.params.id - The requested ride id.
  * @param {Object} res - The client response.
  */
-function ridesGetByIdHandler(db, req, res) {
-    db.all(`SELECT * FROM Rides WHERE rideID='${req.params.id}'`, function (err, rows) {
-        if (err) {
-            return res.send({
-                error_code: 'SERVER_ERROR',
-                message: 'Unknown error'
-            });
-        }
-
+async function ridesGetByIdHandler(db, req, res) {
+    try {
+        const rows = await db.all(`SELECT * FROM Rides WHERE rideID='${req.params.id}'`);
         if (rows.length === 0) {
             return res.send({
                 error_code: 'RIDES_NOT_FOUND_ERROR',
@@ -153,7 +139,12 @@ function ridesGetByIdHandler(db, req, res) {
         }
 
         res.send(rows);
-    });
+    } catch(err) {
+        return res.send({
+            error_code: 'SERVER_ERROR',
+            message: 'Unknown error'
+        });
+    }
 }
 
 module.exports = {
